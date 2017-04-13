@@ -40,9 +40,9 @@ class GameModel: NSObject, SKPhysicsContactDelegate {
         fatalError("init(coder:) has not been implemented")
     }*/
 
-    
-    func startCloudMovements() {
 
+    func startCloudMovements() {
+        
         if gameScene.action(forKey: "spawningClouds") != nil {
             gameScene.removeAction(forKey: "spawningClouds")
         }
