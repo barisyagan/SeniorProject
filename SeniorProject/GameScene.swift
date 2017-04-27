@@ -7,17 +7,49 @@
 //
 
 import SpriteKit
+import GameplayKit
 
 var gameScore = 0
 
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
-    
+    var waitingTimeLimit = 10
+    var waitingTimer: Timer!
+    var playerReady = false
+    var enemyReady = false
+
+    var readyToStart: Bool = false {
+        didSet {
+            if (!single) {
+                let deleteAction = SKAction.removeFromParent()
+                waitingForOpponentLabel.run(deleteAction)
+            
+                waitingTimer.invalidate()
+            
+                currentGameState = gameState.inGame
+            
+                let movePlaneOntoScreenAction = SKAction.moveTo(y: self.size.height*0.2, duration: 0.5)
+                let moveEnemyOntoScreenAction = SKAction.moveTo(y: self.size.height*0.2, duration: 0.7)
+                let startCloudAction = SKAction.run(startCloudMovements)
+                let startGameSequence = SKAction.sequence([movePlaneOntoScreenAction, startCloudAction])
+                enemy.run(moveEnemyOntoScreenAction)
+                player.run(startGameSequence)
+            } else {
+                currentGameState = gameState.inGame
+                let movePlaneOntoScreenAction = SKAction.moveTo(y: self.size.height*0.2, duration: 0.5)
+                let startCloudAction = SKAction.run(startCloudMovements)
+                let startGameSequence = SKAction.sequence([movePlaneOntoScreenAction, startCloudAction])
+                player.run(startGameSequence)
+            }
+        }
+    }
     let service = MultipeerConnector()
-    
+    var randomNumberGenerator: GKARC4RandomSource
     let scoreLabel = SKLabelNode(fontNamed: "The Bold Font")
     let tapToStartLabel = SKLabelNode(fontNamed: "The Bold Font")
+    let readyLabel = SKLabelNode(fontNamed: "The Bold Font")
+    let waitingForOpponentLabel = SKLabelNode(fontNamed: "The Bold Font")
+    
     
     //var livesNumber = 1
     let livesLabel = SKLabelNode(fontNamed: "The Bold Font")
@@ -35,6 +67,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let fireParticle = SKEmitterNode(fileNamed: "FireParticle.sks")
     let smokeParticle = SKEmitterNode(fileNamed: "SmokeParticle.sks")
+    
+    let fireParticleE = SKEmitterNode(fileNamed: "FireParticle.sks")
+    let smokeParticleE = SKEmitterNode(fileNamed: "SmokeParticle.sks")
     
     enum gameState{
         case preGame
@@ -62,6 +97,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //didMove(to:) Called immediately after a scene is presented by a view.
     override func didMove(to view: SKView) {
         
+        if (!single) {
+            initiateEnemyNode()
+            initiateWaitingForOpponentLabel()
+        }
         service.delegate = self
        
         //let model: GameModel = GameModel(gameScene: self)
@@ -70,15 +109,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.physicsWorld.contactDelegate = self
        
+       
+        
         initiateBackgroundNodes()
         
         initiatePlayerNode()
         
-        initiateEnemyNode()
+        
         
         initiateScoreLabel()
         
+        initiateReadyLabel()
+        
         initiateTapToStartLabel()
+        
+        
         
         moveLabelsIn()
         
@@ -118,20 +163,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var i = 0
    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+       
         if currentGameState == gameState.preGame {
+             
             startGame()
+            
         }
         else  {
             
             
             if (i == 0) {
-                //service.send(flag: "1")
+                service.send(flag: "1")
                 movePlayerRight()
                 
                 i = 1
             } else {
-                //service.send(flag: "0")
+                service.send(flag: "0")
                 movePlayerLeft()
                 
                 i = 0
@@ -160,6 +207,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let playableWidth = size.height/aspectRatio
         let margin = (size.width - playableWidth) / 2
         gameArea = CGRect(x: margin, y: 0, width: playableWidth, height: size.height)
+        
+        let date = Date()
+        let calendar = Calendar.current
+        let minute = calendar.component(.minute, from: date)
+
+        var value = minute
+        let data = withUnsafePointer(to: &value) {
+            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
+        }
+        randomNumberGenerator = GKARC4RandomSource(seed: data)
+        randomNumberGenerator.dropValues(2048)
         
         super.init(size: size)
     }
@@ -209,10 +267,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemy.physicsBody!.categoryBitMask = PhysicsCategories.Player
         enemy.physicsBody!.collisionBitMask = PhysicsCategories.None
         enemy.physicsBody!.contactTestBitMask = PhysicsCategories.Cloud
-        //enemy.addChild(fireParticle!)
-        //enemy.addChild(smokeParticle!)
+        enemy.addChild(fireParticleE!)
+        enemy.addChild(smokeParticleE!)
         self.addChild(enemy)
     }
+    
+    
     
     func initiateScoreLabel() {
         scoreLabel.text = "Score: 0"
@@ -233,17 +293,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesLabel.zPosition = 100
         self.addChild(livesLabel)
     }
-    
+    func initiateReadyLabel() {
+        readyLabel.text = "Ready?"
+        readyLabel.fontSize = 150
+        readyLabel.fontColor = SKColor.yellow
+        readyLabel.zPosition = 1
+        readyLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 100)
+        readyLabel.alpha = 0
+        self.addChild(readyLabel)
+    }
     func initiateTapToStartLabel() {
-        tapToStartLabel.text = "Tap To Begin"
-        tapToStartLabel.fontSize = 100
+        tapToStartLabel.text = "tap tap tap"
+        tapToStartLabel.fontSize = 70
         tapToStartLabel.fontColor = SKColor.white
         tapToStartLabel.zPosition = 1
-        tapToStartLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        tapToStartLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 400)
         tapToStartLabel.alpha = 0
         self.addChild(tapToStartLabel)
     }
     
+    func initiateWaitingForOpponentLabel() {
+        waitingForOpponentLabel.setScale(0)
+        waitingForOpponentLabel.text = "waiting for opponent"
+        waitingForOpponentLabel.fontSize = 70
+        waitingForOpponentLabel.fontColor = SKColor.white
+        waitingForOpponentLabel.zPosition = 1
+        waitingForOpponentLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 200)
+        waitingForOpponentLabel.alpha = 1
+        self.addChild(waitingForOpponentLabel)
+    }
     func initiateRainEmitterNode() {
         invisibleCenter.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         
@@ -265,22 +343,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let fadeInAction = SKAction.fadeIn(withDuration: 0.3)
         tapToStartLabel.run(fadeInAction)
+        readyLabel.run(fadeInAction)
     }
     
     func startGame() {
-        currentGameState = gameState.inGame
+        
+        if (!single) {
+            service.send(flag: "2")
+        
+            waitingTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        
+            playerReady = true
+        
+            if enemyReady == true {
+                readyToStart = true
+            }
+        } else {
+            readyToStart = true
+        }
+        
         
         let fadeOutAction = SKAction.fadeOut(withDuration: 0.5)
         let deleteAction = SKAction.removeFromParent()
         let deleteSequence = SKAction.sequence([fadeOutAction, deleteAction])
         tapToStartLabel.run(deleteSequence)
+        readyLabel.run(deleteSequence)
         
-        let movePlaneOntoScreenAction = SKAction.moveTo(y: self.size.height*0.2, duration: 0.5)
-        let moveEnemyOntoScreenAction = SKAction.moveTo(y: self.size.height*0.2, duration: 0.7)
-        let startCloudAction = SKAction.run(startCloudMovements)
-        let startGameSequence = SKAction.sequence([movePlaneOntoScreenAction, startCloudAction])
-        enemy.run(moveEnemyOntoScreenAction)
-        player.run(startGameSequence)
+        
+
+        
+    }
+    
+    func runTimedCode() {
+        if  waitingTimeLimit == 0 {
+            waitingTimer.invalidate()
+            currentGameState = gameState.afterGame
+            self.removeAllActions()
+            let changeSceneAction = SKAction.run(changeSceneMainMenu)
+            self.run(changeSceneAction)
+        } else {
+            waitingTimeLimit -= 1
+            let scaleDownAction = SKAction.scale(to: 0.7, duration: 0.5)
+            let scaleUpAction = SKAction.scale(to: 1.5, duration: 0.5)
+            let scaleSequence = SKAction.sequence([scaleUpAction, scaleDownAction])
+            waitingForOpponentLabel.run(scaleSequence)
+        }
     }
     
     func movePlayerRight() {
@@ -368,7 +475,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         smokeParticle?.emissionAngle = 4.71
         fireParticle?.emissionAngle = 4.71
         
-        var randomNumber: Int = Int(random(min:0, max:3))
+        smokeParticleE?.emissionAngle = 4.71
+        fireParticleE?.emissionAngle = 4.71
+        
+        var randomNumber: Int = random(max:3)
         randomNumber = randomNumber * 360
         //var randomXStart: Int = random(min: gameArea.minX, max: gameArea.maxX)
         
@@ -423,15 +533,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             enemy, stop in
             enemy.removeAllActions()
         }
-        let changeSceneAction = SKAction.run(changeScene)
+        let changeSceneAction = SKAction.run(changeSceneGameOver)
         let waitToChangeScene = SKAction.wait(forDuration: 1)
         let changeSceneSequence = SKAction.sequence([waitToChangeScene, changeSceneAction])
         self.run(changeSceneSequence)
     }
     
-    func changeScene() {
+   
+    
+    func changeSceneGameOver() {
         
         let sceneToMoveTo = GameOverScene(size: self.size)
+        sceneToMoveTo.scaleMode = self.scaleMode
+        let myTransition = SKTransition.fade(withDuration: 0.5)
+        self.view!.presentScene(sceneToMoveTo, transition: myTransition)
+        
+    }
+    
+    func changeSceneMainMenu() {
+        
+        let sceneToMoveTo = MainMenuScene(size: self.size)
         sceneToMoveTo.scaleMode = self.scaleMode
         let myTransition = SKTransition.fade(withDuration: 0.5)
         self.view!.presentScene(sceneToMoveTo, transition: myTransition)
@@ -443,15 +564,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.text = "Score: \(gameScore)"
     }
     
+    
+    
     //utility
     
-    func random() -> CGFloat {
-        return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
-    }
-    func random(min: CGFloat, max: CGFloat) -> CGFloat {
-        return random() * (max - min) + min
-    }
+    /*func initializeRandomNumberGenerator() {
+        let input = NSDate.timeIntervalSinceReferenceDate
+        var value = input
+        let data = withUnsafePointer(to: &value) {
+            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: input))
+        }
+        randomNumberGenerator = GKARC4RandomSource(seed: data)
+        randomNumberGenerator.dropValues(1024)
+    }*/
     
+    func random(max: Int) -> Int {
+        
+        return randomNumberGenerator.nextInt(upperBound:max)
+    }    
     
 }
 
@@ -483,7 +613,7 @@ extension GameScene : MultipeerConnectorDelegate {
                 */
             case "0":
                 
-                self.movePlayerLeft()
+                self.moveEnemyLeft()
                 /*
                 //let pointR = CGPoint(x: self.size.width, y: 180 + self.a)
                 let pointL = CGPoint(x: 0, y: 180 + self.a)
@@ -495,6 +625,11 @@ extension GameScene : MultipeerConnectorDelegate {
                 self.enemy.run(moveLA)
                 self.enemy.run(moveL)
                   */
+            case "2":
+                self.enemyReady = true
+                if self.playerReady {
+                    self.readyToStart = true
+                }
             default: break
             }
         }

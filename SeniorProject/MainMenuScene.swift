@@ -9,6 +9,8 @@
 import Foundation
 import SpriteKit
 
+var single = true
+
 class MainMenuScene: SKScene {
     
     override func didMove(to view: SKView) {
@@ -34,14 +36,23 @@ class MainMenuScene: SKScene {
         gameName2.zPosition = 1
         self.addChild(gameName2)
         
-        let startGame = SKLabelNode(fontNamed: "The Bold Font")
-        startGame.text = "Start Game"
-        startGame.fontSize = 130
-        startGame.color = SKColor.white
-        startGame.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.4)
-        startGame.zPosition = 1
-        startGame.name = "startButton"
-        self.addChild(startGame)
+        let singleButton = SKLabelNode(fontNamed: "The Bold Font")
+        singleButton.text = "SinglePlayer"
+        singleButton.fontSize = 130
+        singleButton.color = SKColor.white
+        singleButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.4)
+        singleButton.zPosition = 1
+        singleButton.name = "singlePlayer"
+        self.addChild(singleButton)
+        
+        let multiButton = SKLabelNode(fontNamed: "The Bold Font")
+        multiButton.text = "MultiPlayer"
+        multiButton.fontSize = 130
+        multiButton.color = SKColor.white
+        multiButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.15)
+        multiButton.zPosition = 1
+        multiButton.name = "multiPlayer"
+        self.addChild(multiButton)
         
     }
     
@@ -52,14 +63,24 @@ class MainMenuScene: SKScene {
             let pointOfTouch = touch.location(in: self)
             let nodeITapped = atPoint(pointOfTouch)
             
-            if (nodeITapped.name == "startButton") {
-                
-                let sceneToMoveTo = GameScene(size: self.size)
-                sceneToMoveTo.scaleMode = self.scaleMode
-                let myTrasition = SKTransition.fade(withDuration: 0.5)
-                self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
+            if (nodeITapped.name == "singlePlayer") {
+                single = true
+                moveToGameScene()
             }
+            
+            if (nodeITapped.name == "multiPlayer") {
+                single = false
+                moveToGameScene()
+            }
+        
         }
+    }
+    
+    func moveToGameScene() {
+        let sceneToMoveTo = GameScene(size: self.size)
+        sceneToMoveTo.scaleMode = self.scaleMode
+        let myTrasition = SKTransition.fade(withDuration: 0.5)
+        self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
     }
 }
 
