@@ -10,6 +10,8 @@ import UIKit
 import SpriteKit
 import GameplayKit
 import AVFoundation
+import MultipeerConnectivity
+
 
 class GameViewController: UIViewController {
 
@@ -29,6 +31,9 @@ class GameViewController: UIViewController {
         
         backingAudio.numberOfLoops = -1
         backingAudio.play()
+        
+      
+        
         
         
         let scene = MainMenuScene(size: CGSize(width: 1080, height: 1920))

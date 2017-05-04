@@ -9,9 +9,12 @@
 import Foundation
 import MultipeerConnectivity
 
+var peerList = [MCPeerID]()
+
 class MultipeerConnector : NSObject {
-    let serviceType = "mc-connector"
     
+    let serviceType = "mc-connector"
+   
     let localID = MCPeerID(displayName: UIDevice.current.name)
     
     let advertiser: MCNearbyServiceAdvertiser
@@ -20,6 +23,8 @@ class MultipeerConnector : NSObject {
     
     var delegate : MultipeerConnectorDelegate?
     
+    var opponentPeerID : MCPeerID? = nil
+    
     lazy var session : MCSession = {
         let session = MCSession(peer: self.localID, securityIdentity: nil, encryptionPreference: .none)
         
@@ -27,11 +32,12 @@ class MultipeerConnector : NSObject {
         return session
     }()
     
-    
     override init() {
+        
+        
         advertiser = MCNearbyServiceAdvertiser(peer: localID, discoveryInfo: nil, serviceType: serviceType)
         browser = MCNearbyServiceBrowser(peer: localID, serviceType: serviceType)
-        
+     
         super.init()
         
         advertiser.delegate = self
@@ -40,7 +46,7 @@ class MultipeerConnector : NSObject {
         browser.delegate = self
         browser.startBrowsingForPeers()
         
-        
+                
     }
     
     deinit {
@@ -62,6 +68,16 @@ class MultipeerConnector : NSObject {
         
     }
     
+    /*func sendMinute(minute : String) {
+        do {
+            try self.session.send(minute.data(using: .utf8)!, toPeers: session.connectedPeers, with: .reliable)
+        }
+        catch let error {
+            NSLog("%@", "Error for sending: \(error)")
+        }
+ 
+    }*/
+    
 }
 
 extension MultipeerConnector : MCNearbyServiceAdvertiserDelegate {
@@ -72,7 +88,16 @@ extension MultipeerConnector : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
-        invitationHandler(true, self.session)
+        if opponentPeerID != nil && peerID.displayName == opponentPeerID?.displayName {
+            
+            invitationHandler(true, self.session)
+            /*let date = Date()
+            let calendar = Calendar.current
+            let second = calendar.component(.second, from: date) + 3
+            seed = String(second)
+            send(flag: seed)*/
+        }
+        
     }
     
 }
@@ -85,12 +110,18 @@ extension MultipeerConnector : MCNearbyServiceBrowserDelegate {
     
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         NSLog("%@", "foundPeer: \(peerID)")
-        NSLog("%@", "invitePeer: \(peerID)")
-        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        if !peerList.contains(peerID) {
+            peerList.append(peerID)
+        }
+        //NSLog("%@", "invitePeer: \(peerID)")
+        //browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         NSLog("%@", "lostPeer: \(peerID)")
+        if peerList.contains(peerID) {
+            peerList.remove(at: peerList.index(of: peerID)!)
+        }
     }
     
 }
@@ -99,6 +130,7 @@ extension MultipeerConnector : MCSessionDelegate {
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state)")
+        readyToMoveOn = true
         
     }
     
@@ -124,12 +156,26 @@ extension MultipeerConnector : MCSessionDelegate {
     
 }
 
-
+extension MultipeerConnector: MultiplayerPeerDelegate {
+    func inviteP(peerID: MCPeerID) {
+        self.opponentPeerID = peerID
+        //print("zzzzzzszzzzszszszszz")
+        /*let date = Date()
+        let calendar = Calendar.current
+        let minute = calendar.component(.minute, from: date)*/
+        //String(minute).data(using: .utf8)
+        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        
+        
+    }
+}
 
 protocol MultipeerConnectorDelegate {
     
     func connectedDevicesChanged(manager : MultipeerConnector, connectedDevices: [String])
     
     func numberChanged(manager : MultipeerConnector, numberString: String)
+    
+   // func minuteSend(minute: String)
     
 }

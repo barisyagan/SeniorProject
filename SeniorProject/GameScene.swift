@@ -10,13 +10,15 @@ import SpriteKit
 import GameplayKit
 
 var gameScore = 0
-
+var seed = ""
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var waitingTimeLimit = 10
     var waitingTimer: Timer!
     var playerReady = false
     var enemyReady = false
+    
+    //var totalMinute: Int = 0
 
     var readyToStart: Bool = false {
         didSet {
@@ -43,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
-    let service = MultipeerConnector()
+    
     var randomNumberGenerator: GKARC4RandomSource
     let scoreLabel = SKLabelNode(fontNamed: "The Bold Font")
     let tapToStartLabel = SKLabelNode(fontNamed: "The Bold Font")
@@ -102,6 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             initiateWaitingForOpponentLabel()
         }
         service.delegate = self
+        
        
         //let model: GameModel = GameModel(gameScene: self)
         
@@ -165,7 +168,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        
         if currentGameState == gameState.preGame {
-             
+            
             startGame()
             
         }
@@ -191,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // didBegin(_:) Called when two bodies first contact each other.
     func  didBegin(_ contact: SKPhysicsContact) {
         //if the player has hit the cloud
-        if contact.bodyA.categoryBitMask == PhysicsCategories.Player && contact.bodyB.categoryBitMask == PhysicsCategories.Cloud {
+        /*if contact.bodyA.categoryBitMask == PhysicsCategories.Player && contact.bodyB.categoryBitMask == PhysicsCategories.Cloud {
             if contact.bodyA.node != nil {
                 spawnExplosion(contact.bodyA.node!.position)
             }
@@ -199,7 +202,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             contact.bodyB.node?.removeFromParent()
             
             runGameOver()
-        }
+        }*/
     }
     
     override init(size: CGSize) {
@@ -211,11 +214,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let date = Date()
         let calendar = Calendar.current
         let minute = calendar.component(.minute, from: date)
-
+        
+        //totalMinute += minute
+        
         var value = minute
         let data = withUnsafePointer(to: &value) {
             Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
         }
+        
+        
         randomNumberGenerator = GKARC4RandomSource(seed: data)
         randomNumberGenerator.dropValues(2048)
         
@@ -349,13 +356,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func startGame() {
         
         if (!single) {
+            
             service.send(flag: "2")
-        
+            
+            //randomNumberGenerator = GKARC4RandomSource(seed: seed.data(using: .utf8)!)
+            //randomNumberGenerator?.dropValues(2048)
+            
             waitingTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
         
             playerReady = true
         
             if enemyReady == true {
+                /*let date = Date()
+                let calendar = Calendar.current
+                let minute = calendar.component(.minute, from: date)
+                
+                totalMinute += minute*/
+                
                 readyToStart = true
             }
         } else {
@@ -382,6 +399,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let changeSceneAction = SKAction.run(changeSceneMainMenu)
             self.run(changeSceneAction)
         } else {
+            //service.send(flag: "2")
             waitingTimeLimit -= 1
             let scaleDownAction = SKAction.scale(to: 0.7, duration: 0.5)
             let scaleUpAction = SKAction.scale(to: 1.5, duration: 0.5)
@@ -587,6 +605,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 extension GameScene : MultipeerConnectorDelegate {
     
+    
+    
     func connectedDevicesChanged(manager: MultipeerConnector, connectedDevices: [String]) {
         OperationQueue.main.addOperation {
             
@@ -630,13 +650,21 @@ extension GameScene : MultipeerConnectorDelegate {
                 if self.playerReady {
                     self.readyToStart = true
                 }
-            default: break
+            default:
+                break
+                //seed = numberString
             }
         }
             
     }
+    
+    /*func minuteSend(minute: Int) {
+         OperationQueue.main.addOperation {
+            self.totalMinute += minute
+    }*/
 
 }
+
 
 /*func spawnCloudFromTopRight() {
  
