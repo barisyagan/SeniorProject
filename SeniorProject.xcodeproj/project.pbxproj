@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C10ED4A11EB6151F00F8EA5C /* MultiplayerPeerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10ED4A01EB6151F00F8EA5C /* MultiplayerPeerScene.swift */; };
 		C12B9D341DEDA33000D3C85F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B9D331DEDA33000D3C85F /* AppDelegate.swift */; };
 		C12B9D361DEDA33000D3C85F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = C12B9D351DEDA33000D3C85F /* GameScene.sks */; };
 		C12B9D381DEDA33000D3C85F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = C12B9D371DEDA33000D3C85F /* Actions.sks */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C10ED4A01EB6151F00F8EA5C /* MultiplayerPeerScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiplayerPeerScene.swift; path = ../MultiplayerPeerScene.swift; sourceTree = "<group>"; };
 		C12B9D301DEDA33000D3C85F /* SeniorProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeniorProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12B9D331DEDA33000D3C85F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C12B9D351DEDA33000D3C85F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				C12B9D351DEDA33000D3C85F /* GameScene.sks */,
 				C12B9D371DEDA33000D3C85F /* Actions.sks */,
 				C12B9D391DEDA33000D3C85F /* GameScene.swift */,
+				C10ED4A01EB6151F00F8EA5C /* MultiplayerPeerScene.swift */,
 				C1E468C61E05AE1C00408980 /* MainMenuScene.swift */,
 				C1A2BE4A1E1A4252005BA4B7 /* GameOverScene.swift */,
 				C12B9D3B1DEDA33000D3C85F /* GameViewController.swift */,
@@ -191,6 +194,7 @@
 				C1E468C71E05AE1C00408980 /* MainMenuScene.swift in Sources */,
 				C18CB6C51E9D39AF0093BF82 /* GameModel.swift in Sources */,
 				C12B9D341DEDA33000D3C85F /* AppDelegate.swift in Sources */,
+				C10ED4A11EB6151F00F8EA5C /* MultiplayerPeerScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
