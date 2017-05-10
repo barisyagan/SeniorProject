@@ -10,6 +10,8 @@ import Foundation
 import MultipeerConnectivity
 
 var peerList = [MCPeerID]()
+var seed = Data()
+var opponentName = ""
 
 class MultipeerConnector : NSObject {
     
@@ -89,7 +91,7 @@ extension MultipeerConnector : MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
         if opponentPeerID != nil && peerID.displayName == opponentPeerID?.displayName {
-            
+            seed = context!
             invitationHandler(true, self.session)
             /*let date = Date()
             let calendar = Calendar.current
@@ -131,7 +133,7 @@ extension MultipeerConnector : MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state)")
         readyToMoveOn = true
-        
+        opponentName = peerID.displayName
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
@@ -159,12 +161,21 @@ extension MultipeerConnector : MCSessionDelegate {
 extension MultipeerConnector: MultiplayerPeerDelegate {
     func inviteP(peerID: MCPeerID) {
         self.opponentPeerID = peerID
+        
+        let date = Date()
+        let calendar = Calendar.current
+        let minute = calendar.component(.minute, from: date)
+        var value = minute
+        let data = withUnsafePointer(to: &value) {
+            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
+        }
         //print("zzzzzzszzzzszszszszz")
         /*let date = Date()
         let calendar = Calendar.current
         let minute = calendar.component(.minute, from: date)*/
         //String(minute).data(using: .utf8)
-        browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
+        seed = data
+        browser.invitePeer(peerID, to: self.session, withContext: data, timeout: 10)
         
         
     }
