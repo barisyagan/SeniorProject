@@ -15,6 +15,7 @@ class Plane {
     let node: SKSpriteNode
     let imageName: String
     var yCoor: CGFloat
+    var direction: Bool
     
     let fireParticle = SKEmitterNode(fileNamed: "FireParticle.sks")
     let smokeParticle = SKEmitterNode(fileNamed: "SmokeParticle.sks")
@@ -39,25 +40,31 @@ class Plane {
         node.addChild(fireParticle!)
         node.addChild(smokeParticle!)
         
+        fireParticle?.name = "fireParticle"
+        smokeParticle?.name = "smokeParticle"
+        
         smokeParticle?.emissionAngle = 4.71
         fireParticle?.emissionAngle = 4.71
         
         yCoor = 180
+        direction = false
     }
     
-    func move(direction: Int) {
+    func pokeToMove() {
         yCoor += 40
         
         let xCoor: CGFloat
         var directionalImageName = imageName
         
-        // 0 is left, 1 is right
-        if direction == 0 {
+        // false is left, true is right
+        if direction == false {
             xCoor = 0
             directionalImageName += "L"
+            direction = true
         } else {
             xCoor = size.width
             directionalImageName += "R"
+            direction = false
         }
         
         let point = CGPoint(x: xCoor, y: yCoor)
@@ -66,6 +73,8 @@ class Plane {
         
         node.run(moveAnimation)
         node.run(moveAction)
+        
+       
         
     }
     

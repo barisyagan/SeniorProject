@@ -50,17 +50,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var randomNumberGenerator = GKARC4RandomSource()
     
-    //let scoreLabel = SKLabelNode(fontNamed: "The Bold Font")
     var scoreLabel: SKLabelNode
     var tapToStartLabel: SKLabelNode
     var readyLabel: SKLabelNode
     var waitingForOpponentLabel: SKLabelNode
     var livesLabel: SKLabelNode
-    
-    //var livesNumber = 1
-    
-    //let player = SKSpriteNode(imageNamed: "plane")
-    //let enemy = SKSpriteNode(imageNamed: "enemy")
     
     let player: Plane
     let enemy: Plane
@@ -72,12 +66,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let explosionSound = SKAction.playSoundFileNamed("explosion.wav", waitForCompletion: false)
     
     let invisibleCenter = SKSpriteNode()
-    
-    //let fireParticle = SKEmitterNode(fileNamed: "FireParticle.sks")
-    //let smokeParticle = SKEmitterNode(fileNamed: "SmokeParticle.sks")
-    
-    //let fireParticleE = SKEmitterNode(fileNamed: "FireParticle.sks")
-    //let smokeParticleE = SKEmitterNode(fileNamed: "SmokeParticle.sks")
     
     enum gameState{
         case preGame
@@ -109,26 +97,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameScore = 0
         
         if (!single) {
-            self.addChild(enemy.node) // initiateEnemyNode()
+            self.addChild(enemy.node)
             
             setWaitingForOpponentLabel()
-            self.addChild(waitingForOpponentLabel)   //initiateWaitingForOpponentLabel()
+            self.addChild(waitingForOpponentLabel)
         }
         
         initializeRandomNumberGenerator()
         
         initiateBackgroundNodes()
         
-        self.addChild(player.node)//initiatePlayerNode()
+        self.addChild(player.node)
         
         setScoreLabel()
-        self.addChild(scoreLabel) //initiateScoreLabel()
+        self.addChild(scoreLabel)
         
         setReadyLabel()
-        self.addChild(readyLabel) //initiateReadyLabel()
+        self.addChild(readyLabel)
         
         setTapToStartLabel()
-        self.addChild(tapToStartLabel) //initiateTapToStartLabel()
+        self.addChild(tapToStartLabel)
         
         moveLabelsIn()
         
@@ -144,28 +132,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Background scrolling
         //invisibleCenter.zRotation -= 0.001
         
-        if (lastUpdateTime == 0){
-            lastUpdateTime = currentTime
-        }
-        else {
-            deltaFrameTime = currentTime - lastUpdateTime
-            lastUpdateTime = currentTime
-        }
-        
-        let amountToMoveBackground = amountToMovePerSecond * CGFloat(deltaFrameTime)
-        
-        self.enumerateChildNodes(withName: "Background"){
-            background, stop in
-            if (self.currentGameState == gameState.inGame) {
-                background.position.y -= amountToMoveBackground
-            }
-            if (background.position.y < -self.size.height) {
-                background.position.y += self.size.height * 2
-            }
-        }
+        scrollBackground(currentTime: currentTime)
+
     }
-    
-    var i = 0
    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        
@@ -176,18 +145,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         else  {
             
-            
-            if (i == 0) {
-                service.send(flag: "1")
-                player.move(direction: 1) //movePlayerRight()
-                
-                i = 1
-            } else {
-                service.send(flag: "0")
-                player.move(direction: 0) //movePlayerLeft()
-                
-                i = 0
-            }
+            service.send(flag: "0")
+            player.pokeToMove()
             
             addScore()
         }
@@ -196,19 +155,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // didBegin(_:) Called when two bodies first contact each other.
     func  didBegin(_ contact: SKPhysicsContact) {
         //if the player has hit the cloud
-        if contact.bodyA.categoryBitMask == PhysicsCategories.Player && contact.bodyB.categoryBitMask == PhysicsCategories.Cloud {
-            if contact.bodyA.node != nil {
-                spawnExplosion(contact.bodyA.node!.position)
-            }
-            if contact.bodyA.node?.name == "player" {
-                winner = false
-            }
-            contact.bodyA.node?.removeFromParent()
-            contact.bodyB.node?.removeFromParent()
-            
-            runGameOver()
-        }
+        
+        startContactActions(contact: contact)
+        
     }
+    
     
     override init(size: CGSize) {
         let aspectRatio: CGFloat = 16.0/9.0
@@ -226,24 +177,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesLabel = SKLabelNode(fontNamed: "The Bold Font")
         
         super.init(size: size)
-        
-        
-        
-        /*let date = Date()
-        let calendar = Calendar.current
-        let minute = calendar.component(.minute, from: date)
-        
-        //totalMinute += minute
-        
-        var value = minute
-        let data = withUnsafePointer(to: &value) {
-            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
-        }
-        
-        
-        randomNumberGenerator = GKARC4RandomSource(seed: data)
-        randomNumberGenerator.dropValues(2048)
-        */
         
     }
     
@@ -267,37 +200,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.addChild(background)
         }
     }
-    
-    
-    /*func initiatePlayerNode() {
-        player.name = "player"
-        player.setScale(1)
-        player.position = CGPoint(x: self.size.width/2, y: 0 - player.size.height)
-        player.zPosition = 3
-        player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
-        player.physicsBody!.affectedByGravity = false
-        player.physicsBody!.categoryBitMask = PhysicsCategories.Player
-        player.physicsBody!.collisionBitMask = PhysicsCategories.None
-        player.physicsBody!.contactTestBitMask = PhysicsCategories.Cloud
-        player.addChild(fireParticle!)
-        player.addChild(smokeParticle!)
-        self.addChild(player)
-    }*/
-    
-    /*func initiateEnemyNode() {
-        enemy.name = "enemy"
-        enemy.setScale(1)
-        enemy.position = CGPoint(x: self.size.width/2, y: 0 - enemy.size.height)
-        enemy.zPosition = 2
-        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
-        enemy.physicsBody!.affectedByGravity = false
-        enemy.physicsBody!.categoryBitMask = PhysicsCategories.Player
-        enemy.physicsBody!.collisionBitMask = PhysicsCategories.None
-        enemy.physicsBody!.contactTestBitMask = PhysicsCategories.Cloud
-        enemy.addChild(fireParticleE!)
-        enemy.addChild(smokeParticleE!)
-        self.addChild(enemy)
-    }*/
     
     func setLabel(label: SKLabelNode, text: String, fontSize: CGFloat, fontColor: SKColor, alignment: SKLabelHorizontalAlignmentMode, x: CGFloat, y: CGFloat, zPosition: CGFloat, alpha: CGFloat, scale: CGFloat) {
     
@@ -337,55 +239,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setLabel(label: waitingForOpponentLabel, text: "waiting for opponent", fontSize: 70, fontColor: SKColor.white, alignment: SKLabelHorizontalAlignmentMode.center, x: self.size.width/2, y: size.height/2 - 200, zPosition: 1, alpha: 1, scale: 0)
     }
     
-    /*func initiateScoreLabel() {
-        scoreLabel.text = "Score: 0"
-        scoreLabel.fontSize = 70
-        scoreLabel.fontColor = SKColor.white
-        scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
-        scoreLabel.position = CGPoint(x: self.size.width * 0.15, y: self.size.height + scoreLabel.frame.size.height)
-        scoreLabel.zPosition = 100
-        self.addChild(scoreLabel)
-    }
     
-    func initiateLivesLabel() {
-        livesLabel.text = "Lives: 1"
-        livesLabel.fontSize = 70
-        livesLabel.fontColor = SKColor.white
-        livesLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.right
-        livesLabel.position = CGPoint(x: self.size.width * 0.85, y: self.size.height + livesLabel.frame.size.height)
-        livesLabel.zPosition = 100
-        self.addChild(livesLabel)
-    }
-    func initiateReadyLabel() {
-        readyLabel.text = "Ready?"
-        readyLabel.fontSize = 150
-        readyLabel.fontColor = SKColor.yellow
-        readyLabel.zPosition = 1
-        readyLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 100)
-        readyLabel.alpha = 0
-        self.addChild(readyLabel)
-    }
-    func initiateTapToStartLabel() {
-        tapToStartLabel.text = "tap tap tap"
-        tapToStartLabel.fontSize = 70
-        tapToStartLabel.fontColor = SKColor.white
-        tapToStartLabel.zPosition = 1
-        tapToStartLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 400)
-        tapToStartLabel.alpha = 0
-        self.addChild(tapToStartLabel)
-    }
-    
-    func initiateWaitingForOpponentLabel() {
-        waitingForOpponentLabel.setScale(0)
-        waitingForOpponentLabel.text = "waiting for opponent"
-        waitingForOpponentLabel.fontSize = 70
-        waitingForOpponentLabel.fontColor = SKColor.white
-        waitingForOpponentLabel.zPosition = 1
-        waitingForOpponentLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2 - 200)
-        waitingForOpponentLabel.alpha = 1
-        self.addChild(waitingForOpponentLabel)
-    }*/
- 
  
     func initiateRainEmitterNode() {
         invisibleCenter.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -411,25 +265,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         readyLabel.run(fadeInAction)
     }
     
+    func scrollBackground(currentTime: TimeInterval) {
+        if (lastUpdateTime == 0){
+            lastUpdateTime = currentTime
+        }
+        else {
+            deltaFrameTime = currentTime - lastUpdateTime
+            lastUpdateTime = currentTime
+        }
+        
+        let amountToMoveBackground = amountToMovePerSecond * CGFloat(deltaFrameTime)
+        
+        self.enumerateChildNodes(withName: "Background"){
+            background, stop in
+            if (self.currentGameState == gameState.inGame) {
+                background.position.y -= amountToMoveBackground
+            }
+            if (background.position.y < -self.size.height) {
+                background.position.y += self.size.height * 2
+            }
+        }
+    }
+    
     func startGame() {
         
         if (!single) {
             
-            service.send(flag: "2")
-            
-            //randomNumberGenerator = GKARC4RandomSource(seed: seed.data(using: .utf8)!)
-            //randomNumberGenerator?.dropValues(2048)
+            service.send(flag: "1")
             
             waitingTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
         
             playerReady = true
         
             if enemyReady == true {
-                /*let date = Date()
-                let calendar = Calendar.current
-                let minute = calendar.component(.minute, from: date)
-                
-                totalMinute += minute*/
                 
                 readyToStart = true
             }
@@ -457,7 +325,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let changeSceneAction = SKAction.run(changeSceneMainMenu)
             self.run(changeSceneAction)
         } else {
-            //service.send(flag: "2")
             waitingTimeLimit -= 1
             let scaleDownAction = SKAction.scale(to: 0.7, duration: 0.5)
             let scaleUpAction = SKAction.scale(to: 1.5, duration: 0.5)
@@ -465,52 +332,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             waitingForOpponentLabel.run(scaleSequence)
         }
     }
-    /*
-    func movePlayerRight() {
-        playerYPos += 40
-        
-        let pointR = CGPoint(x: self.size.width, y: playerYPos)
-        let moveR = SKAction.move(to: pointR, duration: 1)
-        let moveRA = SKAction.animate(with: [SKTexture.init(imageNamed: "playerR")], timePerFrame: 1)
-        
-        player.run(moveRA)
-        player.run(moveR)
-    }
-    
-    func movePlayerLeft() {
-        playerYPos += 40
-        
-        let pointL = CGPoint(x: 0, y: playerYPos)
-        let moveL = SKAction.move(to: pointL, duration: 1)
-        let moveLA = SKAction.animate(with: [SKTexture.init(imageNamed: "playerL")], timePerFrame: 1)
-        
-        player.run(moveLA)
-        player.run(moveL)
-    }
-    
-    func moveEnemyRight() {
-        enemyYPos += 40
-        
-        let pointR = CGPoint(x: self.size.width, y: enemyYPos)
-        let moveR = SKAction.move(to: pointR, duration: 1)
-        let moveRA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyR")], timePerFrame: 1)
-        
-        enemy.run(moveRA)
-        enemy.run(moveR)
-    }
-    
-    func moveEnemyLeft() {
-        enemyYPos += 40
-        
-        let pointL = CGPoint(x: 0, y: enemyYPos)
-        let moveL = SKAction.move(to: pointL, duration: 1)
-        let moveLA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyL")], timePerFrame: 1)
-        
-        enemy.run(moveLA)
-        enemy.run(moveL)
-    }
-    */
-    func startCloudMovements() {
+        func startCloudMovements() {
         
         if self.action(forKey: "spawningClouds") != nil {
             self.removeAction(forKey: "spawningClouds")
@@ -548,11 +370,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func spawnCloudFromTop() {
         
         invisibleCenter.zRotation = 0
-        //smokeParticle?.emissionAngle = 4.71
-        //fireParticle?.emissionAngle = 4.71
-        
-        //smokeParticleE?.emissionAngle = 4.71
-        //fireParticleE?.emissionAngle = 4.71
         
         var randomNumber: Int = random(max:3)
         randomNumber = randomNumber * 360
@@ -583,6 +400,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if currentGameState == gameState.inGame {
             cloud.run(cloudSequence)
+        }
+    }
+    
+    func startContactActions(contact: SKPhysicsContact) {
+        if contact.bodyA.categoryBitMask == PhysicsCategories.Player && contact.bodyB.categoryBitMask == PhysicsCategories.Cloud {
+            if contact.bodyA.node != nil {
+                spawnExplosion(contact.bodyA.node!.position)
+            }
+            if contact.bodyA.node?.name == "player" {
+                winner = false
+            }
+            contact.bodyA.node?.removeFromParent()
+            contact.bodyB.node?.removeFromParent()
+            
+            runGameOver()
         }
     }
     
@@ -681,52 +513,23 @@ extension GameScene : MultipeerConnectorDelegate {
         OperationQueue.main.addOperation {
             switch numberString {
                 
+            case "0":
+    
+                self.enemy.pokeToMove() //self.moveEnemyRight()
+                
             case "1":
                 
-                self.enemy.move(direction: 1) //self.moveEnemyRight()
-                
-                /*let pointR = CGPoint(x: self.size.width, y: 180 + self.a)
-                //let pointL = CGPoint(x: 0, y: 180 + self.a)
-                let moveR = SKAction.move(to: pointR, duration: 1)
-                //let moveL = SKAction.move(to: pointL, duration: 1)
-                let moveRA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyR")], timePerFrame: 1)
-                //let moveLA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyL")], timePerFrame: 1)
- 
-                self.enemy.run(moveRA)
-                self.enemy.run(moveR)
-                */
-            case "0":
-                
-                self.enemy.move(direction: 0) //self.moveEnemyLeft()
-                /*
-                //let pointR = CGPoint(x: self.size.width, y: 180 + self.a)
-                let pointL = CGPoint(x: 0, y: 180 + self.a)
-                //let moveR = SKAction.move(to: pointR, duration: 1)
-                let moveL = SKAction.move(to: pointL, duration: 1)
-                //let moveRA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyR")], timePerFrame: 1)
-                let moveLA = SKAction.animate(with: [SKTexture.init(imageNamed: "enemyL")], timePerFrame: 1)
-                
-                self.enemy.run(moveLA)
-                self.enemy.run(moveL)
-                  */
-            case "2":
                 self.enemyReady = true
+                
                 if self.playerReady {
                     self.readyToStart = true
                 }
+                
             default:
                 break
-                
             }
         }
-            
     }
-    
-    /*func minuteSend(minute: Int) {
-         OperationQueue.main.addOperation {
-            self.totalMinute += minute
-    }*/
-
 }
 
 
