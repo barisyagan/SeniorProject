@@ -11,12 +11,12 @@ import SpriteKit
 import MultipeerConnectivity
 
 var single = true
-let service = MultipeerConnector()
+//let service = MultipeerConnector()
 
 class MainMenuScene: SKScene {
     
     override func didMove(to view: SKView) {
-        service.delegate = self as? MultipeerConnectorDelegate
+        //service.delegate = self as? MultipeerConnectorDelegate
         let background = SKSpriteNode(imageNamed: "background")
         background.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
         background.zPosition = 0
@@ -79,10 +79,11 @@ class MainMenuScene: SKScene {
         }
     }
     
+    
     func moveToMultiplayerPeerScene() {
         let sceneToMoveTo = MultiplayerPeerScene(size: self.size)
         sceneToMoveTo.scaleMode = self.scaleMode
-        sceneToMoveTo.delegatePeer = service.self
+        //sceneToMoveTo.delegatePeer = service.self
         let myTrasition = SKTransition.fade(withDuration: 0.5)
         self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
     }

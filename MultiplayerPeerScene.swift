@@ -11,6 +11,7 @@ import SpriteKit
 import MultipeerConnectivity
 
 var readyToMoveOn = false
+let service = MultipeerConnector()
 
 class MultiplayerPeerScene: SKScene {
     
@@ -26,10 +27,10 @@ class MultiplayerPeerScene: SKScene {
     
     var delegatePeer : MultiplayerPeerDelegate?
     
-    var waitingTimeLimit = 10
-    var waitingTimer: Timer!
     
     override init(size: CGSize) {
+        delegatePeer = service.self
+        
         player1 = SKLabelNode(fontNamed: "The Bold Font")
         player2 = SKLabelNode(fontNamed: "The Bold Font")
         player3 = SKLabelNode(fontNamed: "The Bold Font")
@@ -39,6 +40,12 @@ class MultiplayerPeerScene: SKScene {
         player7 = SKLabelNode(fontNamed: "The Bold Font")
         
         super.init(size: size)
+        
+        service.delegate = self as? MultipeerConnectorDelegate
+    }
+    
+    deinit {
+        //service.session.disconnect()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,7 +53,8 @@ class MultiplayerPeerScene: SKScene {
     }
     
      override func didMove(to view: SKView) {
-    
+        service.advertiser.startAdvertisingPeer()
+        service.browser.startBrowsingForPeers()
         player1.text = "<<empty>>"
         player1.fontSize = 150
         player1.color = SKColor.white
@@ -106,7 +114,7 @@ class MultiplayerPeerScene: SKScene {
         self.addChild(player6)
         
         
-        player7.text = "<<empty>>"
+        player7.text = "menu"
         player7.fontSize = 150
         player7.color = SKColor.white
         player7.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.2)
@@ -120,9 +128,10 @@ class MultiplayerPeerScene: SKScene {
         if readyToMoveOn {
             moveToGameScene()
         }
-        for i in 0..<peerList.count {
+        updatePlayerLabels()
+        /*for i in 0..<peerList.count {
             playerList[i].text = peerList[i].displayName
-        }
+        }*/
     }
     
     
@@ -156,8 +165,25 @@ class MultiplayerPeerScene: SKScene {
                 self.delegatePeer?.inviteP(peerID: peerList[5])
                 
             } else if nodeITapped.name == player7.name {
-                self.delegatePeer?.inviteP(peerID: peerList[6])
-                
+                //self.delegatePeer?.inviteP(peerID: peerList[6])
+                service.browser.stopBrowsingForPeers()
+                service.advertiser.stopAdvertisingPeer()
+                let sceneToMoveTo = MainMenuScene(size: self.size)
+                sceneToMoveTo.scaleMode = self.scaleMode
+                let myTrasition = SKTransition.fade(withDuration: 0.5)
+                self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
+            }
+        }
+    }
+    
+    func updatePlayerLabels() {
+        
+        for index in 0..<playerList.count - 1 {
+            let isIndexValid = peerList.indices.contains(index)
+            if isIndexValid {
+                playerList[index].text = peerList[index].displayName
+            } else {
+                playerList[index].text = "<<empty>>"
             }
         }
     }
@@ -166,13 +192,13 @@ class MultiplayerPeerScene: SKScene {
         
         self.removeAllChildren()
         
-        var prep = SKLabelNode(fontNamed: "The Bold Font")
+        let prep = SKLabelNode(fontNamed: "The Bold Font")
         prep.text = "preparing the game"
         prep.fontSize = 100
         prep.color = SKColor.white
         prep.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.5)
         prep.zPosition = 1
-        prep.name = "player7"
+        prep.name = "prep"
         self.addChild(prep)
     }
     

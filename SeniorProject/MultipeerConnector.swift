@@ -54,6 +54,8 @@ class MultipeerConnector : NSObject {
     deinit {
         advertiser.stopAdvertisingPeer()
         browser.stopBrowsingForPeers()
+        
+        
     }
     
     func send(flag : String) {
@@ -162,13 +164,8 @@ extension MultipeerConnector: MultiplayerPeerDelegate {
     func inviteP(peerID: MCPeerID) {
         self.opponentPeerID = peerID
         
-        let date = Date()
-        let calendar = Calendar.current
-        let minute = calendar.component(.minute, from: date)
-        var value = minute
-        let data = withUnsafePointer(to: &value) {
-            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
-        }
+        let minute = getMinute()
+        let data = fromIntToData(minute: minute)
         //print("zzzzzzszzzzszszszszz")
         /*let date = Date()
         let calendar = Calendar.current
@@ -178,6 +175,21 @@ extension MultipeerConnector: MultiplayerPeerDelegate {
         browser.invitePeer(peerID, to: self.session, withContext: data, timeout: 10)
         
         
+    }
+    
+    func getMinute() -> Int {
+        let date = Date()
+        let calendar = Calendar.current
+        let minute = calendar.component(.minute, from: date)
+        return minute
+    }
+    
+    func fromIntToData (minute: Int) -> Data{
+        var value = minute
+        let data = withUnsafePointer(to: &value) {
+            Data(bytes: UnsafePointer($0), count: MemoryLayout.size(ofValue: minute))
+        }
+        return data
     }
 }
 
