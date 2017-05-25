@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Alamofire
+import SwiftyJSON
 import SpriteKit
 
 class ScoreBoardScene: SKScene {
@@ -15,21 +17,67 @@ class ScoreBoardScene: SKScene {
     var scoreLabels: [SKLabelNode] = []
     var scoreTable: [String : String] = [:]
     
+    override init(size: CGSize) {
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMove(to view: SKView) {
-        
+        /*
         let httpHandler = HTTPHandler()
         
         scoreTable = httpHandler.getScoreTable()
         
         initiateLabelsFrom(scoreTable: scoreTable)
-
+        */
+        
+        let url = URL(string: "http://localhost:3000/posts")
+        
+        Alamofire.request(url!, method: .get).validate().responseJSON { response in
+            switch response.result {
+                
+            case .success(let value):
+                
+                let json = JSON(value)
+                for (_,subJson):(String, JSON) in json {
+                    var rowIndex: CGFloat = 0
+                    for (key,subSubJson):(String, JSON) in subJson {
+                        
+                        if (key == "id") {
+                            rowIndex = CGFloat(subSubJson.intValue)
+                        }
+                        if (key != "id") {
+                            
+                            let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")
+                            let labelScore = SKLabelNode(fontNamed: "The Bold Font")
+                            
+                            let y = self.size.height * (10 - rowIndex) * 0.1
+                            
+                            self.setLabel(label: labelPlayer, text: key, fontSize: 100, fontColor: SKColor.yellow, alignment: .left, x: self.size.width*0.1 , y: y, zPosition: 1, alpha: 1, scale: 1)
+                            self.setLabel(label: labelScore, text: subSubJson.stringValue, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.8, y: y, zPosition: 1, alpha: 1, scale: 1)
+                            
+                            self.addChild(labelPlayer)
+                            self.addChild(labelScore)
+                            
+                            
+                        }
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+            //return scoreTable
+        }
         
        
         
     }
     
     
-    
+    /*
     func initiateLabelsFrom(scoreTable: [String : String]) {
         let rowIndex: CGFloat = CGFloat(scoreTable.count)
         
@@ -49,7 +97,7 @@ class ScoreBoardScene: SKScene {
         
         
     }
-    
+    */
     func setLabel(label: SKLabelNode, text: String, fontSize: CGFloat, fontColor: SKColor, alignment: SKLabelHorizontalAlignmentMode, x: CGFloat, y: CGFloat, zPosition: CGFloat, alpha: CGFloat, scale: CGFloat) {
         
         label.text = text
