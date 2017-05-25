@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28B0066CE8F0B5DBAD290785 /* Pods_SeniorProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ECC406A48CD1E8013DDC4AA /* Pods_SeniorProject.framework */; };
 		C12B9D341DEDA33000D3C85F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B9D331DEDA33000D3C85F /* AppDelegate.swift */; };
 		C12B9D361DEDA33000D3C85F /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = C12B9D351DEDA33000D3C85F /* GameScene.sks */; };
 		C12B9D381DEDA33000D3C85F /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = C12B9D371DEDA33000D3C85F /* Actions.sks */; };
@@ -31,6 +32,9 @@
 		C1A37E8D1ECA230E00EA812F /* MultiplayerPeerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A37E8C1ECA230E00EA812F /* MultiplayerPeerScene.swift */; };
 		C1E468C71E05AE1C00408980 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E468C61E05AE1C00408980 /* MainMenuScene.swift */; };
 		C1E468CC1E05B0AB00408980 /* theBoldFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1E468CB1E05B0AB00408980 /* theBoldFont.ttf */; };
+		C1E621A91ED6FCD400CA9862 /* ScoreBoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */; };
+		C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */; };
+		C1E621AD1ED73EC700CA9862 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = C1E621AC1ED73EC700CA9862 /* Podfile */; };
 		C1FD2CB51EC766DC0069935F /* MultipeerConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +56,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1ECC406A48CD1E8013DDC4AA /* Pods_SeniorProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SeniorProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BD7573E63BE805CF3578F1E /* Pods-SeniorProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeniorProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SeniorProject/Pods-SeniorProject.debug.xcconfig"; sourceTree = "<group>"; };
+		5C8D98F5961EF7218A06AA6E /* Pods-SeniorProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeniorProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-SeniorProject/Pods-SeniorProject.release.xcconfig"; sourceTree = "<group>"; };
 		C12B9D301DEDA33000D3C85F /* SeniorProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeniorProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12B9D331DEDA33000D3C85F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C12B9D351DEDA33000D3C85F /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -82,6 +89,9 @@
 		C1A37E8C1ECA230E00EA812F /* MultiplayerPeerScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerPeerScene.swift; sourceTree = "<group>"; };
 		C1E468C61E05AE1C00408980 /* MainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		C1E468CB1E05B0AB00408980 /* theBoldFont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = theBoldFont.ttf; sourceTree = "<group>"; };
+		C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreBoardScene.swift; sourceTree = "<group>"; };
+		C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHandler.swift; sourceTree = "<group>"; };
+		C1E621AC1ED73EC700CA9862 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerConnectorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28B0066CE8F0B5DBAD290785 /* Pods_SeniorProject.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,13 +121,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		70C85A249BD3ACC0B74E94CA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5BD7573E63BE805CF3578F1E /* Pods-SeniorProject.debug.xcconfig */,
+				5C8D98F5961EF7218A06AA6E /* Pods-SeniorProject.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		840D91047BBCEC287317973C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1ECC406A48CD1E8013DDC4AA /* Pods_SeniorProject.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C12B9D271DEDA33000D3C85F = {
 			isa = PBXGroup;
 			children = (
+				C1E621AC1ED73EC700CA9862 /* Podfile */,
 				C12B9D321DEDA33000D3C85F /* SeniorProject */,
 				C18F88821EC3672F0084BE72 /* SeniorProjectTests */,
 				C18F88921EC710350084BE72 /* SeniorProjectUITests */,
 				C12B9D311DEDA33000D3C85F /* Products */,
+				70C85A249BD3ACC0B74E94CA /* Pods */,
+				840D91047BBCEC287317973C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -154,6 +185,8 @@
 				C18CB6C01E9CD1040093BF82 /* MultipeerConnector.swift */,
 				C18CB6C41E9D39AF0093BF82 /* GameModel.swift */,
 				C160F61B1EC1B44F001CF5BC /* Plane.swift */,
+				C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */,
+				C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */,
 			);
 			path = SeniorProject;
 			sourceTree = "<group>";
@@ -186,9 +219,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C12B9D481DEDA33000D3C85F /* Build configuration list for PBXNativeTarget "SeniorProject" */;
 			buildPhases = (
+				AD04FB4368BFCA2931B178BF /* [CP] Check Pods Manifest.lock */,
 				C12B9D2C1DEDA33000D3C85F /* Sources */,
 				C12B9D2D1DEDA33000D3C85F /* Frameworks */,
 				C12B9D2E1DEDA33000D3C85F /* Resources */,
+				87A042E017DA2627DE554D79 /* [CP] Embed Pods Frameworks */,
+				913C1B39A6DF514972B5A849 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -295,6 +331,7 @@
 				C12B9D361DEDA33000D3C85F /* GameScene.sks in Resources */,
 				C1E468CC1E05B0AB00408980 /* theBoldFont.ttf in Resources */,
 				C1513D9A1E1CCA48001FEAC0 /* gameSound.mp3 in Resources */,
+				C1E621AD1ED73EC700CA9862 /* Podfile in Resources */,
 				C12B9D411DEDA33000D3C85F /* Assets.xcassets in Resources */,
 				C12B9D441DEDA33000D3C85F /* LaunchScreen.storyboard in Resources */,
 				C1A2BE711E1B0D31005BA4B7 /* RainParticle.sks in Resources */,
@@ -319,15 +356,65 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		87A042E017DA2627DE554D79 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SeniorProject/Pods-SeniorProject-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		913C1B39A6DF514972B5A849 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SeniorProject/Pods-SeniorProject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD04FB4368BFCA2931B178BF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C12B9D2C1DEDA33000D3C85F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C1A2BE4B1E1A4252005BA4B7 /* GameOverScene.swift in Sources */,
+				C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */,
 				C1A37E8D1ECA230E00EA812F /* MultiplayerPeerScene.swift in Sources */,
 				C160F61C1EC1B44F001CF5BC /* Plane.swift in Sources */,
 				C12B9D3A1DEDA33000D3C85F /* GameScene.swift in Sources */,
+				C1E621A91ED6FCD400CA9862 /* ScoreBoardScene.swift in Sources */,
 				C12B9D3C1DEDA33000D3C85F /* GameViewController.swift in Sources */,
 				C18CB6C11E9CD1040093BF82 /* MultipeerConnector.swift in Sources */,
 				C1E468C71E05AE1C00408980 /* MainMenuScene.swift in Sources */,
@@ -487,6 +574,7 @@
 		};
 		C12B9D491DEDA33000D3C85F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BD7573E63BE805CF3578F1E /* Pods-SeniorProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -502,6 +590,7 @@
 		};
 		C12B9D4A1DEDA33000D3C85F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C8D98F5961EF7218A06AA6E /* Pods-SeniorProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
