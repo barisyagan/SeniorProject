@@ -22,6 +22,7 @@ class MultiplayerPeerScene: SKScene {
     var player5: SKLabelNode
     var player6: SKLabelNode
     var player7: SKLabelNode
+    var scoreBoardButton: SKLabelNode
     
     var playerList = [SKLabelNode]()
     
@@ -38,6 +39,7 @@ class MultiplayerPeerScene: SKScene {
         player5 = SKLabelNode(fontNamed: "The Bold Font")
         player6 = SKLabelNode(fontNamed: "The Bold Font")
         player7 = SKLabelNode(fontNamed: "The Bold Font")
+        scoreBoardButton = SKLabelNode(fontNamed: "The Bold Font")
         
         super.init(size: size)
         
@@ -56,9 +58,9 @@ class MultiplayerPeerScene: SKScene {
         service.advertiser.startAdvertisingPeer()
         service.browser.startBrowsingForPeers()
         player1.text = "<<empty>>"
-        player1.fontSize = 150
+        player1.fontSize = 130
         player1.color = SKColor.white
-        player1.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.8)
+        player1.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.9)
         player1.zPosition = 1
         player1.name = "player1"
         playerList.append(player1)
@@ -66,9 +68,9 @@ class MultiplayerPeerScene: SKScene {
         
         
         player2.text = "<<empty>>"
-        player2.fontSize = 150
+        player2.fontSize = 130
         player2.color = SKColor.white
-        player2.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.7)
+        player2.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.8)
         player2.zPosition = 1
         player2.name = "player2"
         playerList.append(player2)
@@ -76,9 +78,9 @@ class MultiplayerPeerScene: SKScene {
         
         
         player3.text = "<<empty>>"
-        player3.fontSize = 150
+        player3.fontSize = 130
         player3.color = SKColor.white
-        player3.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.6)
+        player3.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.7)
         player3.zPosition = 1
         player3.name = "player3"
         playerList.append(player3)
@@ -86,9 +88,9 @@ class MultiplayerPeerScene: SKScene {
         
         player4 = SKLabelNode(fontNamed: "The Bold Font")
         player4.text = "<<empty>>"
-        player4.fontSize = 150
+        player4.fontSize = 130
         player4.color = SKColor.white
-        player4.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.5)
+        player4.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.6)
         player4.zPosition = 1
         player4.name = "player4"
         playerList.append(player4)
@@ -96,18 +98,18 @@ class MultiplayerPeerScene: SKScene {
         
         player5 = SKLabelNode(fontNamed: "The Bold Font")
         player5.text = "<<empty>>"
-        player5.fontSize = 150
+        player5.fontSize = 130
         player5.color = SKColor.white
-        player5.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.4)
+        player5.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.5)
         player5.zPosition = 1
         player5.name = "player5"
         playerList.append(player5)
         self.addChild(player5)
         
         player6.text = "<<empty>>"
-        player6.fontSize = 150
+        player6.fontSize = 130
         player6.color = SKColor.white
-        player6.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.3)
+        player6.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.4)
         player6.zPosition = 1
         player6.name = "player6"
         playerList.append(player6)
@@ -115,13 +117,21 @@ class MultiplayerPeerScene: SKScene {
         
         
         player7.text = "menu"
-        player7.fontSize = 150
+        player7.fontSize = 130
         player7.color = SKColor.white
         player7.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.2)
         player7.zPosition = 1
         player7.name = "player7"
         playerList.append(player7)
         self.addChild(player7)
+        
+        scoreBoardButton.text = "Scoreboard"
+        scoreBoardButton.fontSize = 130
+        scoreBoardButton.color = SKColor.white
+        scoreBoardButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.3)
+        scoreBoardButton.zPosition = 1
+        scoreBoardButton.name = "scoreBoard"
+        self.addChild(scoreBoardButton)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -172,7 +182,14 @@ class MultiplayerPeerScene: SKScene {
                 sceneToMoveTo.scaleMode = self.scaleMode
                 let myTrasition = SKTransition.fade(withDuration: 0.5)
                 self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
+            
+            } else if nodeITapped.name == scoreBoardButton.name {
+                let sceneToMoveTo = ScoreBoardScene(size: self.size)
+                sceneToMoveTo.scaleMode = self.scaleMode
+                let myTrasition = SKTransition.fade(withDuration: 0.5)
+                self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
             }
+            
         }
     }
     

@@ -13,9 +13,7 @@ import SpriteKit
 
 class ScoreBoardScene: SKScene {
     
-    var playerLabels: [SKLabelNode] = []
-    var scoreLabels: [SKLabelNode] = []
-    var scoreTable: [String : String] = [:]
+    
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -26,14 +24,8 @@ class ScoreBoardScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        /*
-        let httpHandler = HTTPHandler()
         
-        scoreTable = httpHandler.getScoreTable()
-        
-        initiateLabelsFrom(scoreTable: scoreTable)
-        */
-        
+        //http://35.187.26.91:3000/posts
         let url = URL(string: "http://localhost:3000/posts")
         
         Alamofire.request(url!, method: .get).validate().responseJSON { response in
@@ -41,35 +33,30 @@ class ScoreBoardScene: SKScene {
                 
             case .success(let value):
                 
+                var scoreTable = [String : String]()
                 let json = JSON(value)
+                
                 for (_,subJson):(String, JSON) in json {
-                    var rowIndex: CGFloat = 0
+                    
                     for (key,subSubJson):(String, JSON) in subJson {
                         
-                        if (key == "id") {
-                            rowIndex = CGFloat(subSubJson.intValue)
-                        }
                         if (key != "id") {
                             
-                            let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")
-                            let labelScore = SKLabelNode(fontNamed: "The Bold Font")
+                            //if (peerNameList.contains(key) || UIDevice.current.name == key) {
+                                scoreTable[key] = subSubJson.stringValue
                             
-                            let y = self.size.height * (10 - rowIndex) * 0.1
-                            
-                            self.setLabel(label: labelPlayer, text: key, fontSize: 100, fontColor: SKColor.yellow, alignment: .left, x: self.size.width*0.1 , y: y, zPosition: 1, alpha: 1, scale: 1)
-                            self.setLabel(label: labelScore, text: subSubJson.stringValue, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.8, y: y, zPosition: 1, alpha: 1, scale: 1)
-                            
-                            self.addChild(labelPlayer)
-                            self.addChild(labelScore)
-                            
-                            
+                            //}
                         }
                     }
+                    
                 }
+                let scoreTableSorted = self.sortDictionaryByValue(scoreTable: scoreTable)
+                self.initiateLabelsFrom(scoreTable: scoreTableSorted)
+                
             case .failure(let error):
                 print(error)
             }
-            //return scoreTable
+           
         }
         
        
@@ -78,26 +65,48 @@ class ScoreBoardScene: SKScene {
     
     
     /*
-    func initiateLabelsFrom(scoreTable: [String : String]) {
-        let rowIndex: CGFloat = CGFloat(scoreTable.count)
+    func initateLabelsFrom(key: String, subSubJson: JSON, rowIndex: CGFloat) {
+        let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")
+        let labelScore = SKLabelNode(fontNamed: "The Bold Font")
         
+        let y = self.size.height * (10 - rowIndex) * 0.1
+        
+        self.setLabel(label: labelPlayer, text: key, fontSize: 100, fontColor: SKColor.yellow, alignment: .left, x: self.size.width*0.1 , y: y, zPosition: 1, alpha: 1, scale: 1)
+        self.setLabel(label: labelScore, text: subSubJson.stringValue, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.8, y: y, zPosition: 1, alpha: 1, scale: 1)
+        
+        self.addChild(labelPlayer)
+        self.addChild(labelScore)
+    }
+    */
+    
+    func sortDictionaryByValue(scoreTable: [String : String]) -> [(key: String, value : String)] {
+        let scoreTableSorted = scoreTable.sorted { (first: (key: String, value: String), second: (key: String, value: String)) -> Bool in
+            return first.value < second.value
+        }
+        return scoreTableSorted
+    }
+    
+    func initiateLabelsFrom(scoreTable: [(key: String, value: String)]) {
+        var rowIndex: CGFloat = 1
         for (name, score) in scoreTable {
-            
+     
             let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")
             let labelScore = SKLabelNode(fontNamed: "The Bold Font")
             
-            let y = self.size.height * rowIndex * 0.1
+            let y = self.size.height * (10 - rowIndex) * 0.1
                 
             setLabel(label: labelPlayer, text: name, fontSize: 100, fontColor: SKColor.yellow, alignment: .left, x: self.size.width*0.1 , y: y, zPosition: 1, alpha: 1, scale: 1)
             setLabel(label: labelScore, text: score, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.8, y: y, zPosition: 1, alpha: 1, scale: 1)
             
             self.addChild(labelPlayer)
             self.addChild(labelScore)
+            
+            rowIndex += 1
         }
         
         
     }
-    */
+    
     func setLabel(label: SKLabelNode, text: String, fontSize: CGFloat, fontColor: SKColor, alignment: SKLabelHorizontalAlignmentMode, x: CGFloat, y: CGFloat, zPosition: CGFloat, alpha: CGFloat, scale: CGFloat) {
         
         label.text = text

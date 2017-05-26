@@ -10,6 +10,7 @@ import Foundation
 import MultipeerConnectivity
 
 var peerList = [MCPeerID]()
+var peerNameList = [String]()
 var seed = Data()
 var opponentName = ""
 
@@ -116,6 +117,7 @@ extension MultipeerConnector : MCNearbyServiceBrowserDelegate {
         NSLog("%@", "foundPeer: \(peerID)")
         if !peerList.contains(peerID) {
             peerList.append(peerID)
+            peerNameList.append(peerID.displayName)
         }
         //NSLog("%@", "invitePeer: \(peerID)")
         //browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 10)
@@ -125,6 +127,7 @@ extension MultipeerConnector : MCNearbyServiceBrowserDelegate {
         NSLog("%@", "lostPeer: \(peerID)")
         if peerList.contains(peerID) {
             peerList.remove(at: peerList.index(of: peerID)!)
+            peerNameList.remove(at: peerNameList.index(of: peerID.displayName)!)
         }
     }
     

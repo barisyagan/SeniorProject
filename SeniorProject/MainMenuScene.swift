@@ -56,15 +56,6 @@ class MainMenuScene: SKScene {
         multiButton.name = "multiPlayer"
         self.addChild(multiButton)
         
-        let scoreBoardButton = SKLabelNode(fontNamed: "The Bold Font")
-        scoreBoardButton.text = "Scoreboard"
-        scoreBoardButton.fontSize = 130
-        scoreBoardButton.color = SKColor.white
-        scoreBoardButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.14)
-        scoreBoardButton.zPosition = 1
-        scoreBoardButton.name = "scoreBoard"
-        self.addChild(scoreBoardButton)
-        
         
     }
     
@@ -84,11 +75,6 @@ class MainMenuScene: SKScene {
             if (nodeITapped.name == "multiPlayer") {
                 single = false
                 moveToMultiplayerPeerScene()
-            }
-            
-            if (nodeITapped.name == "scoreBoard") {
-                
-                moveToScoreBoardScene()
             }
         
         }
@@ -110,12 +96,5 @@ class MainMenuScene: SKScene {
         self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
     }
     
-    func moveToScoreBoardScene() {
-        let sceneToMoveTo = ScoreBoardScene(size: self.size)
-        sceneToMoveTo.scaleMode = self.scaleMode
-        let myTrasition = SKTransition.fade(withDuration: 0.5)
-        self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
-
-    }
 }
 
