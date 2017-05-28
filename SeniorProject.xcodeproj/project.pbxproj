@@ -23,7 +23,6 @@
 		C15714131EC859E100F6D1B0 /* MultiplayerPeerSceneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15714121EC859E100F6D1B0 /* MultiplayerPeerSceneTests.swift */; };
 		C160F61C1EC1B44F001CF5BC /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160F61B1EC1B44F001CF5BC /* Plane.swift */; };
 		C18CB6C11E9CD1040093BF82 /* MultipeerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18CB6C01E9CD1040093BF82 /* MultipeerConnector.swift */; };
-		C18CB6C51E9D39AF0093BF82 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18CB6C41E9D39AF0093BF82 /* GameModel.swift */; };
 		C18F88841EC3672F0084BE72 /* SeniorProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18F88831EC3672F0084BE72 /* SeniorProjectTests.swift */; };
 		C18F888C1EC3677A0084BE72 /* PlaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18F888B1EC3677A0084BE72 /* PlaneTests.swift */; };
 		C18F88941EC710350084BE72 /* SeniorProjectUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18F88931EC710350084BE72 /* SeniorProjectUITests.swift */; };
@@ -33,7 +32,6 @@
 		C1E468C71E05AE1C00408980 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E468C61E05AE1C00408980 /* MainMenuScene.swift */; };
 		C1E468CC1E05B0AB00408980 /* theBoldFont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1E468CB1E05B0AB00408980 /* theBoldFont.ttf */; };
 		C1E621A91ED6FCD400CA9862 /* ScoreBoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */; };
-		C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */; };
 		C1E621AD1ED73EC700CA9862 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = C1E621AC1ED73EC700CA9862 /* Podfile */; };
 		C1E621B21ED8A17800CA9862 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621B11ED8A17800CA9862 /* Reachability.swift */; };
 		C1FD2CB51EC766DC0069935F /* MultipeerConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */; };
@@ -77,7 +75,6 @@
 		C15714121EC859E100F6D1B0 /* MultiplayerPeerSceneTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerPeerSceneTests.swift; sourceTree = "<group>"; };
 		C160F61B1EC1B44F001CF5BC /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		C18CB6C01E9CD1040093BF82 /* MultipeerConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerConnector.swift; sourceTree = "<group>"; };
-		C18CB6C41E9D39AF0093BF82 /* GameModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		C18F88811EC3672F0084BE72 /* SeniorProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeniorProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18F88831EC3672F0084BE72 /* SeniorProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeniorProjectTests.swift; sourceTree = "<group>"; };
 		C18F88851EC3672F0084BE72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -91,7 +88,6 @@
 		C1E468C61E05AE1C00408980 /* MainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		C1E468CB1E05B0AB00408980 /* theBoldFont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = theBoldFont.ttf; sourceTree = "<group>"; };
 		C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreBoardScene.swift; sourceTree = "<group>"; };
-		C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHandler.swift; sourceTree = "<group>"; };
 		C1E621AC1ED73EC700CA9862 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		C1E621B11ED8A17800CA9862 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerConnectorTests.swift; sourceTree = "<group>"; };
@@ -186,9 +182,7 @@
 				C1513D971E1CC96B001FEAC0 /* explosion.wav */,
 				C1513D991E1CCA48001FEAC0 /* gameSound.mp3 */,
 				C18CB6C01E9CD1040093BF82 /* MultipeerConnector.swift */,
-				C18CB6C41E9D39AF0093BF82 /* GameModel.swift */,
 				C160F61B1EC1B44F001CF5BC /* Plane.swift */,
-				C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */,
 				C1E621B11ED8A17800CA9862 /* Reachability.swift */,
 			);
 			path = SeniorProject;
@@ -413,7 +407,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A2BE4B1E1A4252005BA4B7 /* GameOverScene.swift in Sources */,
-				C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */,
 				C1E621B21ED8A17800CA9862 /* Reachability.swift in Sources */,
 				C1A37E8D1ECA230E00EA812F /* MultiplayerPeerScene.swift in Sources */,
 				C160F61C1EC1B44F001CF5BC /* Plane.swift in Sources */,
@@ -422,7 +415,6 @@
 				C12B9D3C1DEDA33000D3C85F /* GameViewController.swift in Sources */,
 				C18CB6C11E9CD1040093BF82 /* MultipeerConnector.swift in Sources */,
 				C1E468C71E05AE1C00408980 /* MainMenuScene.swift in Sources */,
-				C18CB6C51E9D39AF0093BF82 /* GameModel.swift in Sources */,
 				C12B9D341DEDA33000D3C85F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
