@@ -94,6 +94,7 @@ extension MultipeerConnector : MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
         if opponentPeerID != nil && peerID.displayName == opponentPeerID?.displayName {
+            opponentPeerID = nil
             seed = context!
             invitationHandler(true, self.session)
             /*let date = Date()
@@ -137,8 +138,13 @@ extension MultipeerConnector : MCSessionDelegate {
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state)")
-        readyToMoveOn = true
-        opponentName = peerID.displayName
+        if state == .connected {
+            readyToMoveOn = true
+            opponentName = peerID.displayName
+            opponentPeerID = nil
+        }
+        
+        
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {

@@ -17,7 +17,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var waitingTimer: Timer!
     var playerReady = false
     var enemyReady = false
-    
+    var clouds: [SKSpriteNode]
+    var topCloud: SKNode
     //var totalMinute: Int = 0
 
     var readyToStart: Bool = false {
@@ -79,6 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let None: UInt32 = 0
         static let Player: UInt32 = 0b1 //1
         static let Cloud: UInt32 = 0b10 //2
+        static let Enemy: UInt32 = 0b11 //3
     }
     
     var lastUpdateTime: TimeInterval = 0
@@ -131,7 +133,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         //Background scrolling
         //invisibleCenter.zRotation -= 0.001
-        
+       
         scrollBackground(currentTime: currentTime)
 
     }
@@ -175,6 +177,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         readyLabel = SKLabelNode(fontNamed: "The Bold Font")
         waitingForOpponentLabel = SKLabelNode(fontNamed: "The Bold Font")
         livesLabel = SKLabelNode(fontNamed: "The Bold Font")
+        clouds = []
+        topCloud = SKNode()
         
         super.init(size: size)
         
@@ -393,30 +397,62 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         cloud.physicsBody!.contactTestBitMask = PhysicsCategories.Player
         self.addChild(cloud)
         
-        let moveCloud = SKAction.move(to: endPoint, duration: 2)
+        
+        
+        let moveCloud = SKAction.move(to: endPoint, duration: 1.9)
         let removeCloud = SKAction.removeFromParent()
         //let loseALifeAction = SKAction.run(loseALife)
         let cloudSequence = SKAction.sequence([moveCloud, removeCloud] )
         
         if currentGameState == gameState.inGame {
-            cloud.run(cloudSequence)
+            clouds.append(cloud)
+            cloud.run(cloudSequence, completion: {
+                self.clouds.remove(at: self.clouds.index(of: cloud)!)
+            })
+            
         }
+    }
+    
+    func findNearestCloud(plane: SKSpriteNode, clouds: [SKSpriteNode]) -> SKSpriteNode {
+        var minDistance = findDistanceBetween(nodeA: plane, nodeB: clouds.first!)
+        var indexOFClosest = 0
+        for cloud in clouds {
+            let candidate = findDistanceBetween(nodeA: plane, nodeB: cloud)
+            if candidate < minDistance {
+              minDistance = candidate
+              indexOFClosest = clouds.index(of: cloud)!
+            }
+        }
+        return clouds[indexOFClosest]
+        
+    }
+    
+    func findDistanceBetween(nodeA: SKSpriteNode, nodeB: SKSpriteNode) -> Float {
+        let deltaX = nodeA.position.x - nodeB.position.x
+        let deltaXSquare = deltaX * deltaX
+        let deltaY = nodeA.position.y - nodeB.position.y
+        let deltaYSquare = deltaY * deltaY
+        let result = sqrt(deltaXSquare + deltaYSquare)
+        return Float(result)
     }
     
     func startContactActions(contact: SKPhysicsContact) {
         if contact.bodyA.categoryBitMask == PhysicsCategories.Player && contact.bodyB.categoryBitMask == PhysicsCategories.Cloud {
+            service.send(flag: "3")
             if contact.bodyA.node != nil {
                 spawnExplosion(contact.bodyA.node!.position)
+                
             }
-            if contact.bodyA.node?.name == "player" {
-                winner = false
-            }
+            
+            winner = false
             contact.bodyA.node?.removeFromParent()
             contact.bodyB.node?.removeFromParent()
             
             runGameOver()
         }
     }
+    
+    
     
     func spawnExplosion(_ spawnPosition: CGPoint) {
         let explosion = SKSpriteNode(imageNamed: "explosion")
@@ -524,6 +560,14 @@ extension GameScene : MultipeerConnectorDelegate {
                 if self.playerReady {
                     self.readyToStart = true
                 }
+                
+            case "3":
+                
+                self.spawnExplosion(self.enemy.node.position)
+                self.enemy.node.removeFromParent()
+                self.findNearestCloud(plane: self.enemy.node, clouds: self.clouds).removeFromParent()
+                
+                self.runGameOver()
                 
             default:
                 break

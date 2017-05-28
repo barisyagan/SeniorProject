@@ -34,7 +34,12 @@ class Plane {
         node.zPosition = 3
         node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
         node.physicsBody!.affectedByGravity = false
-        node.physicsBody!.categoryBitMask = 0b1 //0b1 =  1 = Plane (PhysicsCategories)
+        if (node.name == "enemy") {
+            node.physicsBody!.categoryBitMask = 0b11 //0b11 = 3 = Enemy (PhysicsCategories)
+        } else {
+            node.physicsBody!.categoryBitMask = 0b1 //0b1 =  1 = Player (PhysicsCategories)
+        }
+        
         node.physicsBody!.collisionBitMask = 0 // 0 = None (PhysicsCategories)
         node.physicsBody!.contactTestBitMask = 0b10 // 0b10 = 2 = Cloud (PhysicsCategories)
         node.addChild(fireParticle!)

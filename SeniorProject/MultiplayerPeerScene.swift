@@ -9,6 +9,8 @@
 import Foundation
 import SpriteKit
 import MultipeerConnectivity
+import Alamofire
+import SwiftyJSON
 
 var readyToMoveOn = false
 let service = MultipeerConnector()
@@ -57,6 +59,12 @@ class MultiplayerPeerScene: SKScene {
     override func didMove(to view: SKView) {
         service.advertiser.startAdvertisingPeer()
         service.browser.startBrowsingForPeers()
+        
+        let background = SKSpriteNode(imageNamed: "background")
+        background.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        background.zPosition = 0
+        self.addChild(background)
+        
         player1.text = "<<empty>>"
         player1.fontSize = 130
         player1.color = SKColor.white
@@ -119,7 +127,7 @@ class MultiplayerPeerScene: SKScene {
         player7.text = "menu"
         player7.fontSize = 130
         player7.color = SKColor.white
-        player7.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.2)
+        player7.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.1)
         player7.zPosition = 1
         player7.name = "player7"
         playerList.append(player7)
@@ -128,10 +136,14 @@ class MultiplayerPeerScene: SKScene {
         scoreBoardButton.text = "Scoreboard"
         scoreBoardButton.fontSize = 130
         scoreBoardButton.color = SKColor.white
-        scoreBoardButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.3)
+        scoreBoardButton.position = CGPoint(x: self.size.width * 0.5, y: self.size.height*0.25)
         scoreBoardButton.zPosition = 1
         scoreBoardButton.name = "scoreBoard"
         self.addChild(scoreBoardButton)
+        
+        if Reachability.isConnectedToNetwork() {
+            commitNonCommitedPoints()
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -192,7 +204,54 @@ class MultiplayerPeerScene: SKScene {
             
         }
     }
-    
+    func commitNonCommitedPoints() {
+        let url = URL(string: "http://localhost:3000/posts")
+        Alamofire.request(url!, method: .get).validate().responseJSON { response in
+            switch response.result {
+                
+            case .success(let value):
+                var id = 0
+                let json = JSON(value)
+                var newPlayer = true
+                for (_,subJson):(String, JSON) in json {
+                    for (key,subJson):(String, JSON) in subJson {
+                        if (key == "id") {
+                            id = subJson.int!
+                        }
+                        if (key != "id") {
+                            
+                            if (key == UIDevice.current.name) {
+                                newPlayer = false
+                                let currentScore = Int (subJson.stringValue)!
+                                let defaults = UserDefaults()
+                                let nonCommittedScore = defaults.integer(forKey: "nonCommittedP")
+                                let newScore = (String)(currentScore + nonCommittedScore)
+                                let params: [String: String] = [
+                                    key : newScore
+                                ]
+                                let newUrlS = "http://localhost:3000/posts/\(id)"
+                                let newUrl = URL(string: newUrlS)
+                                Alamofire.request(newUrl!, method: .patch, parameters: params).validate()
+                                
+                            }
+                        }
+                    }
+                }
+                if newPlayer {
+                    let defaults = UserDefaults()
+                    let nonCommittedScore = defaults.integer(forKey: "nonCommittedP")
+                    let params: [String: String] = [
+                        UIDevice.current.name : String(nonCommittedScore)
+                    ]
+                    Alamofire.request(url!, method: .post, parameters: params).validate()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+        let defaults = UserDefaults()
+        defaults.set(0, forKey: "nonCommittedP")
+    }
     func updatePlayerLabels() {
         
         for index in 0..<playerList.count - 1 {
@@ -209,6 +268,11 @@ class MultiplayerPeerScene: SKScene {
         
         self.removeAllChildren()
         
+        let background = SKSpriteNode(imageNamed: "background")
+        background.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        background.zPosition = 0
+        self.addChild(background)
+        
         let prep = SKLabelNode(fontNamed: "The Bold Font")
         prep.text = "preparing the game"
         prep.fontSize = 100
@@ -217,6 +281,8 @@ class MultiplayerPeerScene: SKScene {
         prep.zPosition = 1
         prep.name = "prep"
         self.addChild(prep)
+        
+        
     }
     
     

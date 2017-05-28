@@ -13,9 +13,10 @@ import SpriteKit
 
 class ScoreBoardScene: SKScene {
     
-    
+    var menu: SKLabelNode
     
     override init(size: CGSize) {
+        menu = SKLabelNode(fontNamed: "The Bold Font")
         super.init(size: size)
     }
     
@@ -24,6 +25,20 @@ class ScoreBoardScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        
+        let background = SKSpriteNode(imageNamed: "background")
+        background.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+        background.zPosition = 0
+        self.addChild(background)
+        
+        menu.text = "menu"
+        menu.fontSize = 130
+        menu.color = SKColor.white
+        menu.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.1)
+        menu.zPosition = 1
+        menu.name = "menu"
+        self.addChild(menu)
+        
         
         //http://35.187.26.91:3000/posts
         let url = URL(string: "http://localhost:3000/posts")
@@ -63,7 +78,22 @@ class ScoreBoardScene: SKScene {
         
     }
     
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch: AnyObject in touches {
+            
+            let pointOfTouch = touch.location(in: self)
+            let nodeITapped = atPoint(pointOfTouch)
+            
+            if nodeITapped.name == menu.name {
+                let sceneToMoveTo = MultiplayerPeerScene(size: self.size)
+                sceneToMoveTo.scaleMode = self.scaleMode
+                let myTrasition = SKTransition.fade(withDuration: 0.5)
+                self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
+            }
+        }
+    }
+
     /*
     func initateLabelsFrom(key: String, subSubJson: JSON, rowIndex: CGFloat) {
         let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")

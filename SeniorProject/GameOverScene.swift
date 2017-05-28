@@ -8,6 +8,8 @@
 
 import Foundation
 import SpriteKit
+import Alamofire
+import SwiftyJSON
 
 
 import Social
@@ -17,6 +19,7 @@ class GameOverScene: SKScene {
     
     let restartLabel = SKLabelNode(fontNamed: "The Bold Font")
     let tweetLabel = SKLabelNode(fontNamed: "The Bold Font")
+    let menu = SKLabelNode(fontNamed: "The Bold Font")
         
     override func didMove(to view: SKView) {
         let winResult = "has beaten"
@@ -91,6 +94,8 @@ class GameOverScene: SKScene {
             opponentLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.35)
             opponentLabel.zPosition = 1
             self.addChild(opponentLabel)
+            
+            commitPlayerPoint()
         }
         
         restartLabel.text = "Restart"
@@ -107,6 +112,14 @@ class GameOverScene: SKScene {
         tweetLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.15)
         tweetLabel.zPosition = 1
         self.addChild(tweetLabel)
+        
+        menu.text = "menu"
+        menu.fontSize = 125
+        menu.color = SKColor.white
+        menu.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.1)
+        menu.zPosition = 1
+        menu.name = "menu"
+        self.addChild(menu)
         
     }
     
@@ -143,9 +156,79 @@ class GameOverScene: SKScene {
                     self.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
                 }
                 
+            } else if menu.contains(pointOfTouch) {
+                service.session.disconnect()
+                
+                readyToMoveOn = false
+                let sceneToMoveTo = MainMenuScene(size: self.size)
+                sceneToMoveTo.scaleMode = self.scaleMode
+                let myTrasition = SKTransition.fade(withDuration: 0.5)
+                self.view!.presentScene(sceneToMoveTo, transition:  myTrasition)
+               
             }
         }
     }
+    
+    func commitPlayerPoint() {
+        // if connected to the internet
+        if Reachability.isConnectedToNetwork() == true {
+            let url = URL(string: "http://localhost:3000/posts")
+            Alamofire.request(url!, method: .get).validate().responseJSON { response in
+                switch response.result {
+                    
+                case .success(let value):
+                    var id = 0
+                    let json = JSON(value)
+                    var newPlayer = true
+                    for (_,subJson):(String, JSON) in json {
+                        for (key,subJson):(String, JSON) in subJson {
+                            if (key == "id") {
+                                id = subJson.int!
+                            }
+                            if (key != "id") {
+                                
+                                if (key == UIDevice.current.name) {
+                                    newPlayer = false
+                                    let currentScore = Int (subJson.stringValue)!
+                                    let defaults = UserDefaults()
+                                    let nonCommittedScore = defaults.integer(forKey: "nonCommittedP")
+                                    let newScore = (String)(currentScore + nonCommittedScore + 1)
+                                    let params: [String: String] = [
+                                        key : newScore
+                                    ]
+                                    let newUrlS = "http://localhost:3000/posts/\(id)"
+                                    let newUrl = URL(string: newUrlS)
+                                    Alamofire.request(newUrl!, method: .patch, parameters: params).validate()
+                                    
+                                }
+                            }
+                        }
+                    }
+                    if newPlayer {
+                        let defaults = UserDefaults()
+                        let nonCommittedScore = defaults.integer(forKey: "nonCommittedP")
+                        let newNonCommittedScore = nonCommittedScore + 1
+                        let params: [String: String] = [
+                            UIDevice.current.name : String(newNonCommittedScore)
+                        ]
+                        Alamofire.request(url!, method: .post, parameters: params).validate()
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            let defaults = UserDefaults()
+            defaults.set(0, forKey: "nonCommittedP")
+            
+        } else {
+            let defaults = UserDefaults()
+            let nonCommittedScore = defaults.integer(forKey: "nonCommittedP")
+            let newNonCommittedScore = nonCommittedScore + 1
+            defaults.set(newNonCommittedScore, forKey: "nonCommittedP")
+        }
+        
+    }
+    
     
     func getScreenshot(scene: SKScene) -> UIImage {
         let snapshotView = scene.view!.snapshotView(afterScreenUpdates: true)
