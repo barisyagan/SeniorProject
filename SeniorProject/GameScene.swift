@@ -96,6 +96,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         service.delegate = self
+        winner = true
         gameScore = 0
         
         if (!single) {
@@ -111,8 +112,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(player.node)
         
-        setScoreLabel()
-        self.addChild(scoreLabel)
+        if single {
+            setScoreLabel()
+            self.addChild(scoreLabel)
+        }
         
         setReadyLabel()
         self.addChild(readyLabel)
@@ -219,7 +222,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setScoreLabel() {
         
-        setLabel(label: scoreLabel, text: "Score: 0", fontSize: 70, fontColor: SKColor.white, alignment: SKLabelHorizontalAlignmentMode.left, x: self.size.width * 0.15, y: size.height + scoreLabel.frame.size.height, zPosition: 100, alpha: 1, scale: 1)
+            setLabel(label: scoreLabel, text: "Score: 0", fontSize: 70, fontColor: SKColor.white, alignment: SKLabelHorizontalAlignmentMode.left, x: self.size.width * 0.15, y: size.height + scoreLabel.frame.size.height, zPosition: 100, alpha: 1, scale: 1)
+        
     }
     
     func setLivesLabel() {
@@ -441,10 +445,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             service.send(flag: "3")
             if contact.bodyA.node != nil {
                 spawnExplosion(contact.bodyA.node!.position)
-                
+                winner = false
             }
             
-            winner = false
+            
             contact.bodyA.node?.removeFromParent()
             contact.bodyB.node?.removeFromParent()
             

@@ -31,6 +31,17 @@ class ScoreBoardScene: SKScene {
         background.zPosition = 0
         self.addChild(background)
         
+        if !Reachability.isConnectedToNetwork() {
+            let noLabel = SKLabelNode(fontNamed: "The Bold Font")
+            noLabel.text = "No Internet Connection"
+            noLabel.fontSize = 71
+            noLabel.position = CGPoint(x: self.size.width*0.1, y: self.size.height*0.55)
+            noLabel.zPosition = 1
+            noLabel.fontColor = SKColor.white
+            noLabel.horizontalAlignmentMode = .left
+            self.addChild(noLabel)
+        }
+        
         menu.text = "menu"
         menu.fontSize = 130
         menu.color = SKColor.white
@@ -38,6 +49,26 @@ class ScoreBoardScene: SKScene {
         menu.zPosition = 1
         menu.name = "menu"
         self.addChild(menu)
+        
+        let playerSBSLabel = SKLabelNode(fontNamed: "The Bold Font")
+        playerSBSLabel.text = "Player"
+        playerSBSLabel.fontSize = 90
+        playerSBSLabel.position = CGPoint(x: self.size.width*0.1, y: self.size.height*0.9)
+        playerSBSLabel.zPosition = 1
+        playerSBSLabel.fontColor = SKColor.yellow
+        playerSBSLabel.horizontalAlignmentMode = .left
+        self.addChild(playerSBSLabel)
+        
+        let scoreSBSLabel = SKLabelNode(fontNamed: "The Bold Font")
+        scoreSBSLabel.text = "Score"
+        scoreSBSLabel.fontSize = 90
+        scoreSBSLabel.position = CGPoint(x: self.size.width*0.9, y: self.size.height*0.9)
+        scoreSBSLabel.zPosition = 1
+        scoreSBSLabel.fontColor = SKColor.yellow
+        scoreSBSLabel.horizontalAlignmentMode = .right
+        self.addChild(scoreSBSLabel)
+        
+        
         
         
         //http://35.187.26.91:3000/posts
@@ -57,10 +88,10 @@ class ScoreBoardScene: SKScene {
                         
                         if (key != "id") {
                             
-                            //if (peerNameList.contains(key) || UIDevice.current.name == key) {
+                            if (peerNameList.contains(key) || UIDevice.current.name == key) {
                                 scoreTable[key] = subSubJson.stringValue
                             
-                            //}
+                            }
                         }
                     }
                     
@@ -111,7 +142,7 @@ class ScoreBoardScene: SKScene {
     
     func sortDictionaryByValue(scoreTable: [String : String]) -> [(key: String, value : String)] {
         let scoreTableSorted = scoreTable.sorted { (first: (key: String, value: String), second: (key: String, value: String)) -> Bool in
-            return first.value < second.value
+            return first.value > second.value
         }
         return scoreTableSorted
     }
@@ -123,10 +154,10 @@ class ScoreBoardScene: SKScene {
             let labelPlayer = SKLabelNode(fontNamed: "The Bold Font")
             let labelScore = SKLabelNode(fontNamed: "The Bold Font")
             
-            let y = self.size.height * (10 - rowIndex) * 0.1
+            let y = self.size.height * (9 - rowIndex) * 0.1
                 
             setLabel(label: labelPlayer, text: name, fontSize: 100, fontColor: SKColor.yellow, alignment: .left, x: self.size.width*0.1 , y: y, zPosition: 1, alpha: 1, scale: 1)
-            setLabel(label: labelScore, text: score, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.8, y: y, zPosition: 1, alpha: 1, scale: 1)
+            setLabel(label: labelScore, text: score, fontSize: 100, fontColor: SKColor.yellow, alignment: .right, x: self.size.width*0.9, y: y, zPosition: 1, alpha: 1, scale: 1)
             
             self.addChild(labelPlayer)
             self.addChild(labelScore)

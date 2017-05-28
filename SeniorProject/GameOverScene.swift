@@ -39,7 +39,7 @@ class GameOverScene: SKScene {
         gameOverLabel.text = "Game Over"
         gameOverLabel.fontSize = 200
         gameOverLabel.fontColor = SKColor.white
-        gameOverLabel.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.7)
+        gameOverLabel.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.75)
         gameOverLabel.zPosition = 1
         self.addChild(gameOverLabel)
         
@@ -75,7 +75,7 @@ class GameOverScene: SKScene {
             playerLabel.text = UIDevice.current.name
             playerLabel.fontSize = 125
             playerLabel.fontColor = SKColor.white
-            playerLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.55)
+            playerLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.60)
             playerLabel.zPosition = 1
             self.addChild(playerLabel)
             
@@ -83,7 +83,7 @@ class GameOverScene: SKScene {
             resultLabel.text = result
             resultLabel.fontSize = 125
             resultLabel.fontColor = SKColor.white
-            resultLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.45)
+            resultLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.50)
             resultLabel.zPosition = 1
             self.addChild(resultLabel)
             
@@ -91,7 +91,7 @@ class GameOverScene: SKScene {
             opponentLabel.text = opponentName
             opponentLabel.fontSize = 125
             opponentLabel.fontColor = SKColor.white
-            opponentLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.35)
+            opponentLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.40)
             opponentLabel.zPosition = 1
             self.addChild(opponentLabel)
             
@@ -99,22 +99,22 @@ class GameOverScene: SKScene {
         }
         
         restartLabel.text = "Restart"
-        restartLabel.fontSize = 90
+        restartLabel.fontSize = 100
         restartLabel.fontColor = SKColor.white
-        restartLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.3)
+        restartLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.30)
         restartLabel.zPosition = 1
         self.addChild(restartLabel)
         
         
         tweetLabel.text = "Tweet"
-        tweetLabel.fontSize = 125
+        tweetLabel.fontSize = 100
         tweetLabel.fontColor = SKColor.white
-        tweetLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.15)
+        tweetLabel.position = CGPoint(x: self.size.width/2, y: self.size.height*0.20)
         tweetLabel.zPosition = 1
         self.addChild(tweetLabel)
         
         menu.text = "menu"
-        menu.fontSize = 125
+        menu.fontSize = 100
         menu.color = SKColor.white
         menu.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.1)
         menu.zPosition = 1
