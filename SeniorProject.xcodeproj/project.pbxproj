@@ -35,6 +35,7 @@
 		C1E621A91ED6FCD400CA9862 /* ScoreBoardScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */; };
 		C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */; };
 		C1E621AD1ED73EC700CA9862 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = C1E621AC1ED73EC700CA9862 /* Podfile */; };
+		C1E621B21ED8A17800CA9862 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E621B11ED8A17800CA9862 /* Reachability.swift */; };
 		C1FD2CB51EC766DC0069935F /* MultipeerConnectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,7 @@
 		C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreBoardScene.swift; sourceTree = "<group>"; };
 		C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHandler.swift; sourceTree = "<group>"; };
 		C1E621AC1ED73EC700CA9862 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		C1E621B11ED8A17800CA9862 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		C1FD2CB41EC766DC0069935F /* MultipeerConnectorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerConnectorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +172,7 @@
 				C12B9D391DEDA33000D3C85F /* GameScene.swift */,
 				C1A37E8C1ECA230E00EA812F /* MultiplayerPeerScene.swift */,
 				C1E468C61E05AE1C00408980 /* MainMenuScene.swift */,
+				C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */,
 				C1A2BE4A1E1A4252005BA4B7 /* GameOverScene.swift */,
 				C12B9D3B1DEDA33000D3C85F /* GameViewController.swift */,
 				C12B9D3D1DEDA33000D3C85F /* Main.storyboard */,
@@ -185,8 +188,8 @@
 				C18CB6C01E9CD1040093BF82 /* MultipeerConnector.swift */,
 				C18CB6C41E9D39AF0093BF82 /* GameModel.swift */,
 				C160F61B1EC1B44F001CF5BC /* Plane.swift */,
-				C1E621A81ED6FCD400CA9862 /* ScoreBoardScene.swift */,
 				C1E621AA1ED70C3900CA9862 /* HTTPHandler.swift */,
+				C1E621B11ED8A17800CA9862 /* Reachability.swift */,
 			);
 			path = SeniorProject;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 			files = (
 				C1A2BE4B1E1A4252005BA4B7 /* GameOverScene.swift in Sources */,
 				C1E621AB1ED70C3900CA9862 /* HTTPHandler.swift in Sources */,
+				C1E621B21ED8A17800CA9862 /* Reachability.swift in Sources */,
 				C1A37E8D1ECA230E00EA812F /* MultiplayerPeerScene.swift in Sources */,
 				C160F61C1EC1B44F001CF5BC /* Plane.swift in Sources */,
 				C12B9D3A1DEDA33000D3C85F /* GameScene.swift in Sources */,
