@@ -72,7 +72,7 @@ class ScoreBoardScene: SKScene {
         
         
         //http://35.187.26.91:3000/posts
-        let url = URL(string: "http://localhost:3000/posts")
+        let url = URL(string: "http://35.187.26.91:3000/posts")
         
         Alamofire.request(url!, method: .get).validate().responseJSON { response in
             switch response.result {

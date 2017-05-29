@@ -205,7 +205,7 @@ class MultiplayerPeerScene: SKScene {
         }
     }
     func commitNonCommitedPoints() {
-        let url = URL(string: "http://localhost:3000/posts")
+        let url = URL(string: "http://35.187.26.91:3000/posts")
         Alamofire.request(url!, method: .get).validate().responseJSON { response in
             switch response.result {
                 
@@ -229,7 +229,7 @@ class MultiplayerPeerScene: SKScene {
                                 let params: [String: String] = [
                                     key : newScore
                                 ]
-                                let newUrlS = "http://localhost:3000/posts/\(id)"
+                                let newUrlS = "http://35.187.26.91:3000/posts/\(id)"
                                 let newUrl = URL(string: newUrlS)
                                 Alamofire.request(newUrl!, method: .patch, parameters: params).validate()
                                 

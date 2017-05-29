@@ -95,7 +95,9 @@ class GameOverScene: SKScene {
             opponentLabel.zPosition = 1
             self.addChild(opponentLabel)
             
-            commitPlayerPoint()
+            if(winner) {
+                commitPlayerPoint()
+            }
         }
         
         restartLabel.text = "Restart"
@@ -172,7 +174,7 @@ class GameOverScene: SKScene {
     func commitPlayerPoint() {
         // if connected to the internet
         if Reachability.isConnectedToNetwork() == true {
-            let url = URL(string: "http://localhost:3000/posts")
+            let url = URL(string: "http://35.187.26.91:3000/posts")
             Alamofire.request(url!, method: .get).validate().responseJSON { response in
                 switch response.result {
                     
@@ -196,7 +198,7 @@ class GameOverScene: SKScene {
                                     let params: [String: String] = [
                                         key : newScore
                                     ]
-                                    let newUrlS = "http://localhost:3000/posts/\(id)"
+                                    let newUrlS = "http://35.187.26.91:3000/posts/\(id)"
                                     let newUrl = URL(string: newUrlS)
                                     Alamofire.request(newUrl!, method: .patch, parameters: params).validate()
                                     
